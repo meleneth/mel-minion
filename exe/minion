@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+
+require 'optimist'
+
+opts = Optimist::options do
+  opt :command, "Command to run", type: :string, required: true, default: 'help'
+end
+
+case opts[:command]
+when 'help'
+  Optimist::educate
+when 'info'
+  puts "Minion v0.1.0"
+  puts "Author: John Doe"
+when 'enable'
+  cmd_opts = Optimist::options do
+    opt :uuid_primary_keys, "Enable UUID as primary keys", type: :boolean
+  end
+
+  if cmd_opts[:uuid_primary_keys]
+    puts "UUID primary keys enabled"
+  else
+    Optimist::educate
+when 'fix'
+  cmd_opts = Optimist::options do
+    opt :has_many, "Fix has many relationships", type: :boolean
+  end
+
+  if cmd_opts[:has_many]
+    puts "Has many relationships fixed"
+  else
+    Optimist::educate
+else
+  puts "Unknown command"
+end
+
+
