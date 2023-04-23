@@ -1,37 +1,54 @@
 #!/usr/bin/env ruby
 
-require 'optimist'
+require "optimist"
+require "awesome_print"
 
-opts = Optimist::options do
-  opt :command, "Command to run", type: :string, required: true, default: 'help'
-end
+SUB_COMMANDS = %w[enable fix help info]
 
-case opts[:command]
-when 'help'
-  Optimist::educate
-when 'info'
-  puts "Minion v0.1.0"
-  puts "Author: John Doe"
-when 'enable'
-  cmd_opts = Optimist::options do
-    opt :uuid_primary_keys, "Enable UUID as primary keys", type: :boolean
+def parse_args(args_to_parse)
+  global_opts = Optimist.options(args_to_parse) do
+    banner "Swiss army knife programmer's helper"
+    stop_on SUB_COMMANDS
   end
 
-  if cmd_opts[:uuid_primary_keys]
-    puts "UUID primary keys enabled"
-  else
-    Optimist::educate
-when 'fix'
-  cmd_opts = Optimist::options do
-    opt :has_many, "Fix has many relationships", type: :boolean
-  end
+  cmd = args_to_parse.shift
+  case cmd
+  when "help"
+    Optimist.educate
+  when "info"
+    puts "Minion v0.1.0"
+    puts "Author: John Doe"
+  when "enable"
+    cmd_opts = Optimist.options(args_to_parse) do
+      opt :uuid_primary_keys, "Enable UUID as primary keys", type: :boolean
+    end
 
-  if cmd_opts[:has_many]
-    puts "Has many relationships fixed"
+    if cmd_opts[:uuid_primary_keys]
+      puts "UUID primary keys enabled"
+      puts "... but what about actually doing it?"
+    else
+      Optimist.educate
+    end
+  when "fix"
+    cmd_opts = Optimist.options(args_to_parse) do
+      opt :has_many, "Fix has many relationships", type: :boolean
+    end
+
+    if cmd_opts[:has_many]
+      puts "Has many relationships fixed"
+      puts "... but what about actually doing it?"
+    else
+      Optimist.educate
+    end
   else
-    Optimist::educate
-else
-  puts "Unknown command"
+    puts "Unknown command"
+  end
+  {global_options: global_opts,
+   subcommand: cmd,
+   subcommand_options: cmd_opts,
+   remaining_arguments: args_to_parse}
 end
 
-
+options = parse_args ARGV
+puts "TADA"
+ap options
