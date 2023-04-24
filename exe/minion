@@ -3,6 +3,8 @@
 require "optimist"
 require "awesome_print"
 
+require "mel/minion"
+
 SUB_COMMANDS = %w[enable fix help info]
 
 def parse_args(args_to_parse)
@@ -18,6 +20,8 @@ def parse_args(args_to_parse)
   when "info"
     puts "Minion v0.1.0"
     puts "Author: John Doe"
+  when "implement"
+    cmd_opts = args_to_parse.shift
   when "enable"
     cmd_opts = Optimist.options(args_to_parse) do
       opt :uuid_primary_keys, "Enable UUID as primary keys", type: :boolean
@@ -50,5 +54,14 @@ def parse_args(args_to_parse)
 end
 
 options = parse_args ARGV
-puts "TADA"
-ap options
+if options[:subcommand] == "enable"
+  if options[:subcommand_options][:uuid_primary_keys]
+    puts "slugs again"
+    #Mel::Minion::EnableRailsUUIDPrimaryKeys.run
+  end
+elsif options[:subcommand] == "implement"
+  Mel::Minion::Implement.run options[:subcommand_options], *options[:remaining_arguments]
+else
+  puts "TADA"
+  ap options
+end

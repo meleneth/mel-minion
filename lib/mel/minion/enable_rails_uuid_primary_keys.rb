@@ -52,4 +52,3 @@ class EnableRailsUUIDPrimaryKeys
   end
 end
 
-EnableRailsUUIDPrimaryKeys.run

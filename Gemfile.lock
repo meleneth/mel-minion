@@ -9,9 +9,11 @@ GEM
     ast (2.4.2)
     diff-lcs (1.5.0)
     json (2.6.3)
+    language_server-protocol (3.17.0.3)
     parallel (1.22.1)
     parser (3.2.1.0)
       ast (~> 2.4.1)
+    prettier_print (1.2.1)
     rainbow (3.1.1)
     rake (13.0.6)
     regexp_parser (2.7.0)
@@ -41,7 +43,14 @@ GEM
       unicode-display_width (>= 2.4.0, < 3.0)
     rubocop-ast (1.26.0)
       parser (>= 3.2.1.0)
+    ruby-lsp (0.4.5)
+      language_server-protocol (~> 3.17.0)
+      sorbet-runtime
+      syntax_tree (>= 6.1.1, < 7)
     ruby-progressbar (1.11.0)
+    sorbet-runtime (0.5.10793)
+    syntax_tree (6.1.1)
+      prettier_print (>= 1.2.0)
     unicode-display_width (2.4.2)
 
 PLATFORMS
@@ -52,6 +61,7 @@ DEPENDENCIES
   rake (~> 13.0)
   rspec (~> 3.0)
   rubocop (~> 1.21)
+  ruby-lsp (~> 0.4.5)
 
 BUNDLED WITH
    2.3.21
