@@ -51,4 +51,3 @@ class EnableRailsUUIDPrimaryKeys
     end
   end
 end
-

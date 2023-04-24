@@ -57,11 +57,12 @@ options = parse_args ARGV
 if options[:subcommand] == "enable"
   if options[:subcommand_options][:uuid_primary_keys]
     puts "slugs again"
-    #Mel::Minion::EnableRailsUUIDPrimaryKeys.run
+    # Mel::Minion::EnableRailsUUIDPrimaryKeys.run
   end
 elsif options[:subcommand] == "implement"
   project = Mel::Minion::Project.new
   ap project
+  puts "has_lib_dir" if project.has_lib_dir?
   Mel::Minion::Implement.run options[:subcommand_options], *options[:remaining_arguments]
 else
   puts "TADA"

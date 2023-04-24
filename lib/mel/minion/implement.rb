@@ -1,15 +1,30 @@
 require "securerandom"
+require "fileutils"
 
 module Mel::Minion
   class Implement
     def self.run *args
-      project = Project.new
-      if not project.is_ruby_project?
+      name = args.shift
+      fields = args
+      implementor = Implement.new name, fields
+
+      if !implementor.project.is_ruby_project?
         puts "This script must be run from the root directory of a Ruby application."
         exit
       end
 
-      puts "args was: #{args}"
+      puts "#{name} - args was: #{args}"
+      puts implementor.file_name
+      puts implementor.ruby_class
+      puts implementor.spec_file_name
+      puts implementor.spec_file
+
+      implementor.project.in_project_root do
+        implementor.mk_class_directory
+        implementor.mk_spec_directory
+        File.write(implementor.file_name, implementor.ruby_class)
+        File.write(implementor.spec_file_name, implementor.spec_file)
+      end
 
       # create_migration("RailsEnablePgCrypto")
       # generate_initializer
@@ -17,49 +32,95 @@ module Mel::Minion
       # puts "Migration and initializer files created successfully!"
     end
 
-    # Get the timestamp in the format YYYYMMDDHHMMSS
-    class << self
-      private
+    attr_reader :fields
+    attr_reader :name
 
-      def self.lib_dir_exist
-        Dir.exist? "lib"
+    def project
+      @project ||= Project.new
+    end
+
+    def initialize name, fields = []
+      @name = name
+      @fields = fields
+    end
+
+    def mk_class_directory
+      FileUtils.mkdir_p File.dirname(file_name)
+    end
+
+    def mk_spec_directory
+      FileUtils.mkdir_p File.dirname(spec_file_name)
+    end
+
+    def module_name
+      pieces[0..-2].join "::"
+    end
+
+    def class_name
+      pieces[-1]
+    end
+
+    def has_module?
+      module_name != ""
+    end
+
+    def file_name
+      file_pieces = []
+      file_pieces << "lib" if project.has_lib_dir?
+      pieces.each do |p|
+        file_pieces << p.downcase
       end
+      "#{File.join file_pieces}.rb"
+    end
 
-      def self.find_project_dir
+    def spec_file_name
+      file_pieces = ["spec"]
+      pieces.each do |p|
+        file_pieces << p.downcase
       end
+      file_pieces[-1] = "#{file_pieces[-1]}_spec.rb"
+      File.join file_pieces
+    end
 
-      def self.timestamp
-        Time.now.strftime("%Y%m%d%H%M%S")
-      end
+    def pieces
+      @name.split("::")
+    end
 
-      # Generate the filename for the migration
-      def self.generate_filename(prefix)
-        "#{timestamp}_#{prefix}_#{SecureRandom.hex(4)}"
-      end
-
-      # Create a new migration file with the given name
-      def self.create_migration(name)
-        filename = "#{generate_filename(name)}_enable_pgcrypto.rb"
-        File.write("db/migrate/#{filename}", <<~MIGRATION)
-          class #{name} < ActiveRecord::Migration[6.0]
-            def change
-              enable_extension 'pgcrypto'
-            end
-          end
-        MIGRATION
-      end
-
-      # Generate the initializer to configure ActiveRecord to use UUID columns by default
-      def self.generate_initializer
-        initializer_file = "config/initializers/active_record_uuid.rb"
-        if !File.exist?(initializer_file)
-          File.write(initializer_file, <<~INITIALIZER)
-            Rails.application.config.active_record.generators do |g|
-              g.orm :active_record, primary_key_type: :uuid
-            end
-          INITIALIZER
+    def ruby_class
+      lines = FileLines.new [
+        "# frozen_string_literal: true",
+        ""
+      ]
+      if has_module?
+        lines.lines << "module #{module_name}"
+        lines.lines << "  class #{class_name}"
+        fields.each do |field|
+          lines.lines << "    def #{field}"
+          lines.lines << "    end"
         end
+        lines.lines << "  end"
+      else
+        lines.lines << "class #{class_name}"
       end
+      lines.lines << "end"
+      lines.lines << ""
+      lines.as_file
+    end
+
+    def spec_file
+      lines = FileLines.new [
+        "# frozen_string_literal: true",
+        "",
+        "Rspec.describe #{@name} do",
+        "  let(:subject) { #{@name}.new }"
+      ]
+      fields.each do |field|
+        lines.lines << "  describe \"##{field}\" do"
+        lines.lines << "    expect(subject.#{field}).to eq(false)"
+        lines.lines << "  end"
+      end
+      lines.lines << "end"
+      lines.lines << ""
     end
   end
 end
