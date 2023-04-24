@@ -60,6 +60,8 @@ if options[:subcommand] == "enable"
     #Mel::Minion::EnableRailsUUIDPrimaryKeys.run
   end
 elsif options[:subcommand] == "implement"
+  project = Mel::Minion::Project.new
+  ap project
   Mel::Minion::Implement.run options[:subcommand_options], *options[:remaining_arguments]
 else
   puts "TADA"

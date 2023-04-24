@@ -3,7 +3,8 @@ require "securerandom"
 module Mel::Minion
   class Implement
     def self.run *args
-      if !File.exist?("Gemfile")
+      project = Project.new
+      if not project.is_ruby_project?
         puts "This script must be run from the root directory of a Ruby application."
         exit
       end
@@ -22,6 +23,9 @@ module Mel::Minion
 
       def self.lib_dir_exist
         Dir.exist? "lib"
+      end
+
+      def self.find_project_dir
       end
 
       def self.timestamp

@@ -8,5 +8,6 @@ module Mel
 end
 
 require_relative "minion/version"
+require_relative "minion/project"
 require_relative "minion/implement"
 require_relative "minion/enable_rails_uuid_primary_keys"
