@@ -9,6 +9,6 @@ gem "rake", "~> 13.0"
 
 gem "rspec", "~> 3.0"
 
-gem "rubocop", "~> 1.21"
+gem "standard", group: [:development, :test]
 
 gem "ruby-lsp", "~> 0.4.5"

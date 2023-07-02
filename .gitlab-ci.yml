@@ -8,3 +8,4 @@ default:
 rspec:
   script:
     - bundle exec rspec
+    - standardrb
