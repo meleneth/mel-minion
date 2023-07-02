@@ -121,6 +121,7 @@ module Mel::Minion
       end
       lines.lines << "end"
       lines.lines << ""
+      lines.as_file
     end
   end
 end
