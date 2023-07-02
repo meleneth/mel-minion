@@ -69,5 +69,15 @@ end
 "
       end
     end
+    describe "#spec_file" do
+      it "works for easy case" do
+        expect(subject.spec_file).to eq "# frozen_string_literal: true
+
+RSpec.describe Foo::Bar do
+  let(:subject) { Foo::Bar.new }
+end
+"
+      end
+    end
   end
 end

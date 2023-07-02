@@ -111,7 +111,7 @@ module Mel::Minion
       lines = FileLines.new [
         "# frozen_string_literal: true",
         "",
-        "Rspec.describe #{@name} do",
+        "RSpec.describe #{@name} do",
         "  let(:subject) { #{@name}.new }"
       ]
       fields.each do |field|
