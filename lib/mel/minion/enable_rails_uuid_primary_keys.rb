@@ -1,7 +1,6 @@
 require "securerandom"
 
 module Mel::Minion
-
   class MustBeInRailsProjectError < StandardError
   end
 
@@ -73,5 +72,4 @@ module Mel::Minion
       end
     end
   end
-
 end
