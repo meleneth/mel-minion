@@ -1,53 +1,77 @@
 require "securerandom"
 
-class EnableRailsUUIDPrimaryKeys
-  def self.run
-    if !File.exist?("Gemfile")
-      puts "This script must be run from the root directory of a Ruby on Rails application."
-      exit
-    end
+module Mel::Minion
 
-    create_migration("RailsEnablePgCrypto")
-    generate_initializer
-
-    puts "Migration and initializer files created successfully!"
+  class MustBeInRailsProjectError < StandardError
   end
 
-  # Get the timestamp in the format YYYYMMDDHHMMSS
-  class << self
-    private
+  class PgCryptoAlreadyEnabled < StandardError
+  end
 
-    def self.timestamp
-      Time.now.strftime("%Y%m%d%H%M%S")
+  class EnableRailsUUIDPrimaryKeys
+    def self.run
+      project = Mel::Minion::Project.new
+
+      raise MustBeInRailsProjectError.new unless project.is_rails_project?
+      raise PgCryptoAlreadyEnabled.new if already_has_pgcrypto_enabled?
+      create_migration("RailsEnablePgCrypto")
+      generate_initializer
+
+      puts "Migration and initializer files created successfully!"
     end
 
-    # Generate the filename for the migration
-    def self.generate_filename(prefix)
-      "#{timestamp}_#{prefix}_#{SecureRandom.hex(4)}"
+    def self.already_has_pgcrypto_enabled?
+      all_migrations.any? do |migration|
+        migration.match pgcrypto_regex
+      end
     end
 
-    # Create a new migration file with the given name
-    def self.create_migration(name)
-      filename = "#{generate_filename(name)}_enable_pgcrypto.rb"
-      File.write("db/migrate/#{filename}", <<~MIGRATION)
-        class #{name} < ActiveRecord::Migration[6.0]
-          def change
-            enable_extension 'pgcrypto'
+    def self.all_migrations
+      Mel::Minion::FileLines.from_glob("db/migrate/*.rb")
+    end
+
+    # Get the timestamp in the format YYYYMMDDHHMMSS
+    class << self
+      private
+
+      def timestamp
+        Time.now.strftime("%Y%m%d%H%M%S")
+      end
+
+      def pgcrypto_regex
+        Regexp.new("enable_extension 'pgcrypto'")
+      end
+
+      # Generate the filename for the migration
+      def generate_filename(prefix)
+        "#{timestamp}_#{prefix}_#{SecureRandom.hex(4)}"
+      end
+
+      # Create a new migration file with the given name
+      def create_migration(name)
+        filename = "#{generate_filename(name)}_enable_pgcrypto.rb"
+        FileUtils.mkdir_p "db/migrate"
+        File.write("db/migrate/#{filename}", <<~MIGRATION)
+          class #{name} < ActiveRecord::Migration[6.0]
+            def change
+              enable_extension 'pgcrypto'
+            end
           end
+        MIGRATION
+      end
+
+      # Generate the initializer to configure ActiveRecord to use UUID columns by default
+      def generate_initializer
+        initializer_file = "config/initializers/active_record_uuid.rb"
+        if !File.exist?(initializer_file)
+          File.write(initializer_file, <<~INITIALIZER)
+            Rails.application.config.active_record.generators do |g|
+              g.orm :active_record, primary_key_type: :uuid
+            end
+          INITIALIZER
         end
-      MIGRATION
-    end
-
-    # Generate the initializer to configure ActiveRecord to use UUID columns by default
-    def self.generate_initializer
-      initializer_file = "config/initializers/active_record_uuid.rb"
-      if !File.exist?(initializer_file)
-        File.write(initializer_file, <<~INITIALIZER)
-          Rails.application.config.active_record.generators do |g|
-            g.orm :active_record, primary_key_type: :uuid
-          end
-        INITIALIZER
       end
     end
   end
+
 end

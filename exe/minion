@@ -9,7 +9,15 @@ SUB_COMMANDS = %w[enable fix help info]
 
 def parse_args(args_to_parse)
   global_opts = Optimist.options(args_to_parse) do
-    banner "Swiss army knife programmer's helper"
+    banner <<~EOS
+      Swiss army knife programmer's helper
+      possible sub commands:
+      minion enable --uuid-primary-keys
+      minion fix
+      minion help
+      minion info
+      minion implement
+    EOS
     stop_on SUB_COMMANDS
   end
 
@@ -18,7 +26,7 @@ def parse_args(args_to_parse)
   when "help"
     Optimist.educate
   when "info"
-    puts "Minion v0.1.0"
+    puts "Minion v0.1.1"
     puts "Author: John Doe"
   when "implement"
     cmd_opts = args_to_parse.shift
@@ -28,8 +36,6 @@ def parse_args(args_to_parse)
     end
 
     if cmd_opts[:uuid_primary_keys]
-      puts "UUID primary keys enabled"
-      puts "... but what about actually doing it?"
     else
       Optimist.educate
     end
@@ -56,8 +62,7 @@ end
 options = parse_args ARGV
 if options[:subcommand] == "enable"
   if options[:subcommand_options][:uuid_primary_keys]
-    puts "slugs again"
-    # Mel::Minion::EnableRailsUUIDPrimaryKeys.run
+    Mel::Minion::EnableRailsUUIDPrimaryKeys.run
   end
 elsif options[:subcommand] == "implement"
   project = Mel::Minion::Project.new

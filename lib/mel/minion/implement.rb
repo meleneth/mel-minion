@@ -87,7 +87,7 @@ module Mel::Minion
     end
 
     def ruby_class
-      lines = FileLines.new [
+      lines = FileLines.new filename: file_name, lines: [
         "# frozen_string_literal: true",
         ""
       ]
@@ -108,7 +108,7 @@ module Mel::Minion
     end
 
     def spec_file
-      lines = FileLines.new [
+      lines = FileLines.new filename: spec_file_name, lines: [
         "# frozen_string_literal: true",
         "",
         "RSpec.describe #{@name} do",
