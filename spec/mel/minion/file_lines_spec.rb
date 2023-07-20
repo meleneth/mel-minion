@@ -18,12 +18,12 @@ RSpec.describe Mel::Minion::FileLines do
     end
     describe "#match" do
       it "true case" do
-        expect(subject.match "some_gem").to eq(true)
-        expect(subject.match "rails").to eq(true)
+        expect(subject.match "some_gem").to be_truthy
+        expect(subject.match "rails").to be_truthy
       end
       it "false case" do
-        expect(subject.match "other_gem").to eq(false)
-        expect(subject.match "machina").to eq(false)
+        expect(subject.match "other_gem").to eq([])
+        expect(subject.match "machina").to eq([])
       end
     end
   end

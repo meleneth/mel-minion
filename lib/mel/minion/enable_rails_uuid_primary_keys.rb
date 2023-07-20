@@ -1,18 +1,14 @@
 require "securerandom"
 
 module Mel::Minion
-  class MustBeInRailsProjectError < StandardError
-  end
-
-  class PgCryptoAlreadyEnabled < StandardError
-  end
 
   class EnableRailsUUIDPrimaryKeys
     def self.run
       project = Mel::Minion::Project.new
 
       raise MustBeInRailsProjectError.new unless project.is_rails_project?
-      raise PgCryptoAlreadyEnabled.new if already_has_pgcrypto_enabled?
+      raise MustUsePostgresError.new unless project.uses_postgres?
+      raise PgCryptoAlreadyEnabledError.new if already_has_pgcrypto_enabled?
       create_migration("RailsEnablePgCrypto")
       generate_initializer
 

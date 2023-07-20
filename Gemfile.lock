@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mel-minion (0.1.0)
+    mel-minion (0.1.1)
 
 GEM
   remote: https://rubygems.org/

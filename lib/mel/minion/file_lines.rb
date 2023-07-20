@@ -3,6 +3,7 @@
 module Mel::Minion
   class FileLines
     attr_accessor :lines
+    attr_reader :filename
 
     def self.from_glob(my_glob)
       Dir.glob(my_glob).each do |filename|
@@ -30,7 +31,11 @@ module Mel::Minion
     end
 
     def match(pattern)
-      @lines.any? { |l| l.match pattern }
+      @lines.filter { |l| l.match pattern }
+    end
+
+    def bare_filename
+      File.basename(@filename, ".rb")
     end
   end
 end

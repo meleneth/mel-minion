@@ -52,6 +52,13 @@ module Mel::Minion
       false
     end
 
+    def uses_postgres?
+      if is_ruby_project?
+        return gemfile_includes_gem? "pg"
+      end
+      false
+    end
+
     def is_rack_project?
       return true if File.exist? File.join(@root_directory, "config.ru")
       false
@@ -75,7 +82,7 @@ module Mel::Minion
     end
 
     def gemfile_includes_gem?(gem)
-      gemfile.match(gem)
+      gemfile.match("gem \"#{gem}\"")
     end
 
     def gemfile

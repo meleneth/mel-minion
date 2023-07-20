@@ -45,8 +45,6 @@ def parse_args(args_to_parse)
     end
 
     if cmd_opts[:has_many]
-      puts "Has many relationships fixed"
-      puts "... but what about actually doing it?"
     else
       Optimist.educate
     end
@@ -63,6 +61,10 @@ options = parse_args ARGV
 if options[:subcommand] == "enable"
   if options[:subcommand_options][:uuid_primary_keys]
     Mel::Minion::EnableRailsUUIDPrimaryKeys.run
+  end
+elsif options[:subcommand] == "fix"
+  if options[:subcommand_options][:has_many]
+    Mel::Minion::FixHasMany.run
   end
 elsif options[:subcommand] == "implement"
   project = Mel::Minion::Project.new
