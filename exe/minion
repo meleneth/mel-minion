@@ -21,6 +21,7 @@ def parse_args(args_to_parse)
     stop_on SUB_COMMANDS
   end
 
+  cmd_opts = {}
   cmd = args_to_parse.shift
   case cmd
   when "help"
