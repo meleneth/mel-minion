@@ -41,6 +41,7 @@ def parse_args(args_to_parse)
       Optimist.educate
     end
   when "has_many"
+    args_to_parse.shift
     cmd_opts[:source] = args_to_parse.shift
     cmd_opts[:destination] = args_to_parse.shift
   else
