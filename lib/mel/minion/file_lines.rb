@@ -28,7 +28,7 @@ module Mel::Minion
       @lines.join "\n"
     end
 
-    def save_file
+    def save
       File.write(filename, as_file)
     end
 
