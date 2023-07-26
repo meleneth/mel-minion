@@ -39,15 +39,9 @@ def parse_args(args_to_parse)
     else
       Optimist.educate
     end
-  when "fix"
-    cmd_opts = Optimist.options(args_to_parse) do
-      opt :has_many, "Fix has many relationships", type: :boolean
-    end
-
-    if cmd_opts[:has_many]
-    else
-      Optimist.educate
-    end
+  when "has_many"
+    options[:subcommand][:source] = args_to_parse.shift
+    options[:subcommand][:destination] = args_to_parse.shift
   else
     puts "Unknown command"
   end
@@ -62,15 +56,14 @@ if options[:subcommand] == "enable"
   if options[:subcommand_options][:uuid_primary_keys]
     Mel::Minion::EnableRailsUUIDPrimaryKeys.run
   end
-elsif options[:subcommand] == "fix"
-  if options[:subcommand_options][:has_many]
-    Mel::Minion::FixHasMany.run
-  end
 elsif options[:subcommand] == "implement"
   project = Mel::Minion::Project.new
   ap project
   puts "has_lib_dir" if project.has_lib_dir?
-  Mel::Minion::Implement.run options[:subcommand_options], *options[:remaining_arguments]
+  Mel::Minion::Implement::RubyClass.run options[:subcommand_options], *options[:remaining_arguments]
+elsif options[:subcommand] == "has_many"
+  project = Mel::Minion::Project.new
+  Mel::Minion::Implement::RailsHasMany.new options[:subcommand_options][:source], options[:subcommand_options][:destination]
 else
   puts "TADA"
   ap options
