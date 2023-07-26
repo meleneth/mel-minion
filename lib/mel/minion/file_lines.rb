@@ -25,7 +25,7 @@ module Mel::Minion
     end
 
     def as_file
-      @lines.join "\n"
+      "#{@lines.join "\n"}\n"
     end
 
     def save

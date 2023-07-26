@@ -43,6 +43,7 @@ RSpec.describe Mel::Minion::Implement::RubyClass do
 
 class Foo
 end
+
 "
       end
     end
@@ -66,6 +67,7 @@ module Foo
   class Bar
   end
 end
+
 "
       end
     end
@@ -76,6 +78,7 @@ end
 RSpec.describe Foo::Bar do
   let(:subject) { Foo::Bar.new }
 end
+
 "
       end
     end

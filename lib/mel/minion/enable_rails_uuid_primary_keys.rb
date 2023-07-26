@@ -60,7 +60,7 @@ module Mel::Minion
         initializer_file = "config/initializers/active_record_uuid.rb"
         if !File.exist?(initializer_file)
           File.write(initializer_file, <<~INITIALIZER)
-            Rails.application.config.active_record.generators do |g|
+            Rails.application.config.generators do |g|
               g.orm :active_record, primary_key_type: :uuid
             end
           INITIALIZER
