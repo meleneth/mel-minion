@@ -6,11 +6,13 @@ module Mel::Minion
     attr_reader :filename
 
     def self.from_glob(my_glob)
+      files = []
       Dir.glob(my_glob).each do |filename|
         File.open(filename) do |fh|
-          from_filehandle(filename: filename, handle: fh)
+          files << from_filehandle(filename: filename, handle: fh)
         end
       end
+      files
     end
 
     def self.from_filehandle(filename:, handle:)

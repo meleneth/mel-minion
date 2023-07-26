@@ -41,7 +41,6 @@ def parse_args(args_to_parse)
       Optimist.educate
     end
   when "has_many"
-    args_to_parse.shift
     cmd_opts[:source] = args_to_parse.shift
     cmd_opts[:destination] = args_to_parse.shift
   else
@@ -64,8 +63,7 @@ elsif options[:subcommand] == "implement"
   puts "has_lib_dir" if project.has_lib_dir?
   Mel::Minion::Implement::RubyClass.run options[:subcommand_options], *options[:remaining_arguments]
 elsif options[:subcommand] == "has_many"
-  project = Mel::Minion::Project.new
-  Mel::Minion::Implement::RailsHasMany.new options[:subcommand_options][:source], options[:subcommand_options][:destination]
+  Mel::Minion::Implement::RailsHasMany.run options[:subcommand_options][:source], options[:subcommand_options][:destination]
 else
   puts "TADA"
   ap options

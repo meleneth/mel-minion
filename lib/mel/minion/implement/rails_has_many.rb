@@ -7,6 +7,7 @@ module Mel::Minion::Implement
     def self.run *args
       table = args.shift
       field = args.shift
+      puts "Running against: #{table} #{field}"
       project = Mel::Minion::Project.new
 
       if !project.is_ruby_project?
@@ -16,6 +17,7 @@ module Mel::Minion::Implement
 
       implementor = RailsHasMany.new table, field
       implementor.do_transform
+      puts "save the thing"
       implementor.save_files
     end
 
@@ -24,6 +26,7 @@ module Mel::Minion::Implement
     attr_reader :modified_files
 
     def do_transform
+      puts table_model
       table_model.lines[1, 0] = "  has_many :#{field}"
       modified_files << table_model
     end
@@ -37,7 +40,9 @@ module Mel::Minion::Implement
     end
 
     def table_model
-      project.models.find { |m| m.filename == model_filename }
+      @table_model ||= project.models.find { |m| m.filename == model_filename }
+      raise "No such table #{model_filename}" unless @table_model
+      @table_model
     end
 
     def project
