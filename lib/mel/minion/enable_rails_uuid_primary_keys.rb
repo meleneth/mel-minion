@@ -9,7 +9,7 @@ module Mel::Minion
       raise MustBeInRailsProjectError.new unless project.is_rails_project?
       raise MustUsePostgresError.new unless project.uses_postgres?
       raise PgCryptoAlreadyEnabledError.new if already_has_pgcrypto_enabled?
-      create_migration("RailsEnablePgCrypto")
+      create_migration("rails_enable_pgcrypto")
       generate_initializer
 
       puts "Migration and initializer files created successfully!"
@@ -39,7 +39,7 @@ module Mel::Minion
 
       # Generate the filename for the migration
       def generate_filename(prefix)
-        "#{timestamp}_#{prefix}_#{SecureRandom.hex(4)}"
+        timestamp
       end
 
       # Create a new migration file with the given name
@@ -47,7 +47,7 @@ module Mel::Minion
         filename = "#{generate_filename(name)}_enable_pgcrypto.rb"
         FileUtils.mkdir_p "db/migrate"
         File.write("db/migrate/#{filename}", <<~MIGRATION)
-          class #{name} < ActiveRecord::Migration[6.0]
+          class EnablePgcrypto < ActiveRecord::Migration[6.0]
             def change
               enable_extension 'pgcrypto'
             end
