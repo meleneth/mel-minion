@@ -12,3 +12,5 @@ gem "rspec", "~> 3.0"
 gem "standard", group: [:development, :test]
 
 gem "ruby-lsp", "~> 0.4.5"
+
+gem "awesome_print"

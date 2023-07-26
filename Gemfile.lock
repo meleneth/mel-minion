@@ -7,6 +7,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.2)
+    awesome_print (1.9.2)
     diff-lcs (1.5.0)
     json (2.6.3)
     language_server-protocol (3.17.0.3)
@@ -74,6 +75,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  awesome_print
   mel-minion!
   rake (~> 13.0)
   rspec (~> 3.0)
