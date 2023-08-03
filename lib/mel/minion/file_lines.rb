@@ -15,6 +15,12 @@ module Mel::Minion
       files
     end
 
+    def self.from_file(filename:)
+      File.open(filename) do |fh|
+        return FileLines.from_filehandle(filename: filename, handle: fh)
+      end
+    end
+
     def self.from_filehandle(filename:, handle:)
       FileLines.new filename: filename, lines: handle.readlines.map(&:chomp)
     end
