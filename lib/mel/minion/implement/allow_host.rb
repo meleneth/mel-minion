@@ -7,6 +7,7 @@ module Mel::Minion::Implement
       hostname = args.shift
       implementor = AllowHost.new hostname
 
+      project = Mel::Minion::Project.new
       raise MustBeInRailsProjectError.new unless project.is_rails_project?
 
       implementor.apply_transform
@@ -32,7 +33,7 @@ module Mel::Minion::Implement
     end
 
     def env_file
-      @env_file ||= FileLines.from_file("config/environment/development.rb")
+      @env_file ||= Mel::Minion::FileLines.from_file(filename: "config/environments/development.rb")
     end
   end
 end

@@ -65,7 +65,7 @@ elsif options[:subcommand] == "implement"
 elsif options[:subcommand] == "has_many"
   Mel::Minion::Implement::RailsHasMany.run options[:subcommand_options][:source], options[:subcommand_options][:destination]
 elsif options[:subcommand] == "allow-host"
-  Mel::Minion::Implement::AllowHost options[:subcommand_options][:hostname]
+  Mel::Minion::Implement::AllowHost.run options[:subcommand_options][:hostname]
 else
   puts "TADA"
   ap options

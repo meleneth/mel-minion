@@ -16,6 +16,7 @@ module Mel
 end
 
 require_relative "minion/implement/base"
+
 require_relative "minion/enable_rails_uuid_primary_keys"
 require_relative "minion/file_lines"
 require_relative "minion/implement/allow_host"
