@@ -23,8 +23,8 @@ module Mel::Minion::Implement
     def apply_transform
       run_command("npm install -D tailwindcss postcss autoprefixer")
       run_command("npx tailwindcss init -p")
-      @modified_files << FileLines.from_contents(filename: "tailwind.config.js", contents: tailwind_config_js)
-      @modified_files << FileLines.from_contents(filename: "assets/style.css", contents: style_css)
+      @modified_files << Mel::Minion::FileLines.from_contents(filename: "tailwind.config.js", contents: tailwind_config_js)
+      @modified_files << Mel::Minion::FileLines.from_contents(filename: "assets/style.css", contents: style_css)
     end
 
     def tailwind_config_js

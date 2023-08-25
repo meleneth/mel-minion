@@ -33,8 +33,25 @@ module Mel::Minion
       end
     end
 
+    def file_relative_json(filename)
+      file_relative_open(filename) do |f|
+        return JSON.parse f.read
+      end
+    end
+
     def is_ruby_project?
       file_relative_exists?("Gemfile")
+    end
+
+    def is_node_project?
+      file_relative_exists?("package.json")
+    end
+
+    def is_vue_project?
+      if is_node_project?
+        return package_includes_dependency("vue")
+      end
+      false
     end
 
     def is_node_project?
@@ -83,6 +100,10 @@ module Mel::Minion
 
     def gemfile_includes_gem?(gem)
       gemfile.match("gem \"#{gem}\"")
+    end
+
+    def package_includes_dependency(package)
+      
     end
 
     def gemfile
