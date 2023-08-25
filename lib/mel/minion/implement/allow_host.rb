@@ -8,7 +8,7 @@ module Mel::Minion::Implement
       implementor = AllowHost.new hostname
 
       project = Mel::Minion::Project.new
-      raise MustBeInRailsProjectError.new unless project.is_rails_project?
+      raise Mel::Minion::Error::MustBeInRailsProjectError.new unless project.is_rails_project?
 
       implementor.apply_transform
       implementor.save_modified_files

@@ -5,7 +5,7 @@ require "awesome_print"
 
 require "mel/minion"
 
-SUB_COMMANDS = %w[enable fix help info allow-host]
+SUB_COMMANDS = %w[enable fix help info allow-host tailwind]
 
 def parse_args(args_to_parse)
   global_opts = Optimist.options(args_to_parse) do
@@ -32,6 +32,8 @@ def parse_args(args_to_parse)
     puts "Author: John Doe"
   when "allow-host"
     cmd_opts[:hostname] = args_to_parse.shift || Socket.gethostname
+  when "tailwind"
+    Mel::Minion::Implement::Tailwind.run
   when "implement"
     cmd_opts = args_to_parse.shift
   when "enable"
@@ -64,8 +66,6 @@ elsif options[:subcommand] == "implement"
   Mel::Minion::Implement::RubyClass.run options[:subcommand_options], *options[:remaining_arguments]
 elsif options[:subcommand] == "has_many"
   Mel::Minion::Implement::RailsHasMany.run options[:subcommand_options][:source], options[:subcommand_options][:destination]
-elsif options[:subcommand] == "tailwind"
-  Mel::Minion::Implement::Tailwind.run
 elsif options[:subcommand] == "allow-host"
   Mel::Minion::Implement::AllowHost.run options[:subcommand_options][:hostname]
 else

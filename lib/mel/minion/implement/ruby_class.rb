@@ -6,7 +6,7 @@ module Mel::Minion::Implement
     def self.run *args
       name = args.shift
       fields = args
-      implementor = Implement.new name, fields
+      implementor = RubyClass.new name, fields
 
       if !implementor.project.is_ruby_project?
         puts "This script must be run from the root directory of a Ruby application."

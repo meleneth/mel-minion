@@ -2,21 +2,14 @@
 
 module Mel
   module Minion
-    class MustBeInRailsProjectError < StandardError
+    module Implement
     end
-
-    class PgCryptoAlreadyEnabledError < StandardError
-    end
-
-    class MustUsePostgresError < StandardError
-    end
-    class Error < StandardError; end
-    # Your code goes here...
   end
 end
 
-require_relative "minion/implement/base"
+require_relative "minion/error"
 
+require_relative "minion/implement/base"
 require_relative "minion/enable_rails_uuid_primary_keys"
 require_relative "minion/file_lines"
 require_relative "minion/implement/allow_host"

@@ -4,11 +4,10 @@ require "fileutils"
 module Mel::Minion::Implement
   class Tailwind < Base
     def self.run *args
-      hostname = args.shift
-      implementor = Tailwind.new hostname
+      implementor = Tailwind.new
 
       project = Mel::Minion::Project.new
-      raise MustBeInVueProjectError.new unless project.is_vue_project?
+      raise Mel::Minion::Error::MustBeInVueProjectError.new unless project.is_vue_project?
 
       implementor.apply_transform
       implementor.save_modified_files
