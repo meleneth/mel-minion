@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "securerandom"
+require "json"
 
 module Mel::Minion
   class Project
@@ -54,10 +55,6 @@ module Mel::Minion
       false
     end
 
-    def is_node_project?
-      file_relative_exists?("package.json")
-    end
-
     def is_python_project?
       file_relative_exists?("setup.py")
     end
@@ -103,7 +100,7 @@ module Mel::Minion
     end
 
     def package_includes_dependency(package)
-      
+      file_relative_json("package.json")["dependencies"].has_key? package
     end
 
     def gemfile

@@ -2,6 +2,8 @@
 
 module Mel
   module Minion
+    module Error
+    end
     module Implement
     end
   end

@@ -13,6 +13,7 @@ module Mel::Minion::Error
   class MustUsePostgresError < StandardError
   end
 
-  class Error < StandardError; end
+  class Error < StandardError
+  end
 end
 
