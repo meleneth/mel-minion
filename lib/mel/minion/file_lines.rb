@@ -21,6 +21,10 @@ module Mel::Minion
       end
     end
 
+    def self.from_contents(filename:, contents:)
+      FileLines.new filename: filename, lines: contents.lines
+    end
+
     def self.from_filehandle(filename:, handle:)
       FileLines.new filename: filename, lines: handle.readlines.map(&:chomp)
     end
