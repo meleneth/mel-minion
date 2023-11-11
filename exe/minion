@@ -5,7 +5,7 @@ require "awesome_print"
 
 require "mel/minion"
 
-SUB_COMMANDS = %w[enable fix help info allow-host tailwind]
+SUB_COMMANDS = %w[enable fix help info allow-host tailwind mumble]
 
 def parse_args(args_to_parse)
   global_opts = Optimist.options(args_to_parse) do
@@ -17,6 +17,7 @@ def parse_args(args_to_parse)
       minion help
       minion info
       minion implement
+      minion mumble somefile.gemspec
       minion allow-host
     EOS
     stop_on SUB_COMMANDS
@@ -48,13 +49,17 @@ def parse_args(args_to_parse)
   when "has_many"
     cmd_opts[:source] = args_to_parse.shift
     cmd_opts[:destination] = args_to_parse.shift
+  when "mumble"
+    cmd_opts[:gemspec] = args_to_parse.shift
   else
     puts "Unknown command"
   end
-  {global_options: global_opts,
-   subcommand: cmd,
-   subcommand_options: cmd_opts,
-   remaining_arguments: args_to_parse}
+  {
+    global_options: global_opts,
+    subcommand: cmd,
+    subcommand_options: cmd_opts,
+    remaining_arguments: args_to_parse
+  }
 end
 
 options = parse_args ARGV
@@ -68,6 +73,10 @@ elsif options[:subcommand] == "has_many"
   Mel::Minion::Implement::RailsHasMany.run options[:subcommand_options][:source], options[:subcommand_options][:destination]
 elsif options[:subcommand] == "allow-host"
   Mel::Minion::Implement::AllowHost.run options[:subcommand_options][:hostname]
+elsif options[:subcommand] == "mumble"
+  mumbler = Mel::Minion::Mumble.new options[:subcommand_options][:gemspec]
+  mumbler.transform
+  mumbler.save
 else
   puts "TADA"
   ap options

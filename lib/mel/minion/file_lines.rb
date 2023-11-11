@@ -1,9 +1,17 @@
 # frozen_string_literal: true
 
+require "forwardable"
+
 module Mel::Minion
   class FileLines
     attr_accessor :lines
     attr_reader :filename
+
+    extend Forwardable
+
+    def_delegator :@lines, :index
+    def_delegator :@lines, :[]
+    def_delegator :@lines, :[]=
 
     def self.from_glob(my_glob)
       files = []
