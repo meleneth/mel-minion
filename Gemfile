@@ -16,3 +16,5 @@ gem "ruby-lsp", "~> 0.4.5"
 gem "awesome_print"
 
 gem "debug", github: "ruby/debug"
+
+gem "factory_bot", "~> 6.3"
